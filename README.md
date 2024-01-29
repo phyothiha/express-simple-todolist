@@ -1,5 +1,9 @@
 # Instructions
 
+### Postman API Documentation
+
+[https://documenter.getpostman.com/view/15162195/2s9YysC1os](https://documenter.getpostman.com/view/15162195/2s9YysC1os)
+
 ### Follow below steps, by using terminal, to run on local machine.
 
 1. First open **Git Bash App** and change directory to **Desktop**
