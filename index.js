@@ -1,9 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
+var cors = require("cors");
 
 const app = express();
 const port = 7000;
+
+// configure cors
+app.use(cors());
 
 //  parses incoming requests with JSON payloads
 app.use(express.json());
@@ -54,7 +58,7 @@ app.get("/api/tasks", async (req, res) => {
       },
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       message: err.message,
     });
   }
@@ -66,13 +70,13 @@ app.post("/api/tasks", async (req, res) => {
 
   // req name value validation
   if (name == undefined) {
-    return res.json({
+    return res.status(422).json({
       message: "Task name is required!",
     });
   }
 
   if (name.length < 5) {
-    return res.json({
+    return res.status(422).json({
       message: "Task name should be more than 5 characters!",
     });
   }
@@ -90,7 +94,7 @@ app.post("/api/tasks", async (req, res) => {
       data: newTask,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       message: err.message,
     });
   }
@@ -103,7 +107,7 @@ app.put(
     const task = await Task.findOne({ uuid: req.params.taskId });
 
     if (!task) {
-      return res.json({
+      return res.status(404).json({
         message: `TaskID ${req.params.taskId} not found!`,
       });
     }
@@ -120,13 +124,13 @@ app.put(
     const { isCompleted } = req.body;
 
     if (name == undefined || isCompleted == undefined) {
-      return res.json({
+      return res.status(422).json({
         message: "Task name or isCompleted status is required!",
       });
     }
 
     if (name.length < 5) {
-      return res.json({
+      return res.status(422).json({
         message: "Task name should be more than 5 characters!",
       });
     }
@@ -135,7 +139,7 @@ app.put(
     const isTaskNameExists = await Task.findOne({ name });
 
     if (isTaskNameExists && req.params.taskId != isTaskNameExists.uuid) {
-      return res.json({
+      return res.status(422).json({
         message: "Task name should be unique",
       });
     }
@@ -154,7 +158,7 @@ app.put(
         data: updatedTask,
       });
     } catch (err) {
-      res.json({
+      res.status(500).json({
         message: err.message,
       });
     }
@@ -168,7 +172,7 @@ app.delete(
     const task = await Task.findOne({ uuid: req.params.taskId });
 
     if (!task) {
-      return res.json({
+      return res.status(404).json({
         message: `TaskID ${req.params.taskId} not found!`,
       });
     }
@@ -183,7 +187,7 @@ app.delete(
         message: `TaskID ${req.params.taskId} deleted successfully!`,
       });
     } catch (err) {
-      res.json({
+      res.status(500).json({
         message: err.message,
       });
     }
